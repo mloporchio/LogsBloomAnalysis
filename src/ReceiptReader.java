@@ -10,7 +10,8 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 
 /**
- * 
+ * This program parses a list of Ethereum blocks (in compressed JSON format)
+ * and extracts information about TX receipts.
  * @author Matteo Loporchio
  */
 public class ReceiptReader {

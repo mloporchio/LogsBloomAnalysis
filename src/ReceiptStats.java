@@ -15,7 +15,6 @@ import com.google.gson.stream.JsonReader;
  * <blockId>,<txCount>,<numLogs>,<numKeys>
  * 
  * @author Matteo Loporchio
- *
  */
 public class ReceiptStats {
 	public static final Gson gson = new Gson();
