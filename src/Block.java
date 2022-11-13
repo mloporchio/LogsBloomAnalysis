@@ -17,5 +17,4 @@ public class Block {
 		this.timestamp = timestamp;
 		this.transactions = transactions;
 	}
-	
 }
