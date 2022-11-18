@@ -1,6 +1,7 @@
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 import com.google.gson.Gson;
@@ -12,7 +13,7 @@ import com.google.gson.stream.JsonReader;
  * The output is a CSV file with one line for each block.
  * Each line is formatted as follows:
  * 
- * <blockId>,<txCount>,<numLogs>,<numKeys>
+ * <blockId>,<txCount>,<numLogs>,<numKeys>,<numDistKeys>
  * 
  * @author Matteo Loporchio
  */
@@ -40,6 +41,7 @@ public class ReceiptStats {
 				// Deserialize block and extract all fields of interest.
 				Block b = gson.fromJson(reader, Block.class);
 				int blockId = Integer.decode(b.number), txCount = 0, numLogs = 0, numKeys = 0;
+				Set<String> keySet = new HashSet<>();
 				// Examine all transactions in the block (if any).
 				if (b.transactions != null) {
 					txCount = b.transactions.size();
@@ -48,19 +50,25 @@ public class ReceiptStats {
 						if (t.logs != null) {
 							numLogs += t.logs.size();
 							for (Log l : t.logs) {
-								if (l.address == null) 
+								if (l.address == null) {
 									System.err.printf("Null log address: blockId=%d, txId=%s, logIndex=%s\n", blockId, t.hash, l.logIndex);
-								else
+								}
+								else {
 									numKeys += 1;
-								if (l.topics == null) 
+									keySet.add(l.address);
+								}
+								if (l.topics == null)  {
 									System.err.printf("Null log topics: blockId=%d, txId=%s, logIndex=%s\n", blockId, t.hash, l.logIndex);
-								else
+								}	
+								else {
 									numKeys += l.topics.size();
+									keySet.addAll(l.topics);
+								}
 							}
 						}
 					}
 				}
-				out.printf("%d,%d,%d,%d\n", blockId, txCount, numLogs, numKeys);
+				out.printf("%d,%d,%d,%d,%d\n", blockId, txCount, numLogs, numKeys, keySet.size());
 			}
 			reader.endArray();
 		}

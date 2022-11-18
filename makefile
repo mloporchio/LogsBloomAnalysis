@@ -5,12 +5,10 @@
 #
 
 JC=javac
-JFLAGS=-cp "src:lib/gson-2.10.jar"
-SOURCE=src
-TARGET=bin
+JFLAGS=-cp ".:./lib/gson-2.10.jar"
 
 default: 
-	$(JC) $(JFLAGS) $(SOURCE)/*.java -d $(TARGET)
+	$(JC) $(JFLAGS) *.java
 
 clean:
-	$(RM) $(TARGET)/*.class
+	$(RM) *.class
